@@ -1,9 +1,15 @@
+-- Файл: lua/plugins/lsp/mason.lua
+
 return {
-    -- Mason — установщик LSP серверов
     {
         "williamboman/mason.nvim",
         config = function()
             require("mason").setup({
+                -- Добавляем custom registry для Roslyn
+                registries = {
+                    "github:mason-org/mason-registry",
+                    "github:Crashdummyy/mason-registry",  -- содержит roslyn
+                },
                 ui = {
                     border = "rounded",
                     icons = {
@@ -16,7 +22,6 @@ return {
         end,
     },
 
-    -- Мост между Mason и nvim-lspconfig
     {
         "williamboman/mason-lspconfig.nvim",
         dependencies = {
@@ -25,24 +30,19 @@ return {
         },
         config = function()
             require("mason-lspconfig").setup({
-                -- Автоматически установить эти серверы
                 ensure_installed = {
-                    "lua_ls",      -- Lua (для конфигурации NeoVim)
-                    "omnisharp",   -- C# (мы настроим позже)
+                    "lua_ls",
+                    -- НЕ добавляйте "roslyn" сюда, 
+                    -- т.к. его нет в mason-lspconfig
                 },
-                -- Автоматически настраивать установленные серверы
                 automatic_installation = true,
             })
         end,
     },
 
-    -- nvim-lspconfig — конфигурации серверов
     {
         "neovim/nvim-lspconfig",
         config = function()
-            -- Базовая настройка LSP клиента
-
-            -- Диагностика
             vim.diagnostic.config({
                 virtual_text = true,
                 signs = true,
@@ -55,7 +55,6 @@ return {
                 },
             })
 
-            -- Иконки для диагностики
             local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
             for type, icon in pairs(signs) do
                 local hl = "DiagnosticSign" .. type

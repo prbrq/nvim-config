@@ -1,34 +1,38 @@
--- Путь для установки lazy.nvim
+-- Файл: lua/config/lazy.lua
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
--- Проверяем, установлен ли lazy.nvim
 if not vim.loop.fs_stat(lazypath) then
-    -- Если нет, клонируем из GitHub
     vim.fn.system({
         "git",
         "clone",
-        "--filter=blob:none",  -- partial clone для скорости
+        "--filter=blob:none",
         "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable",     -- используем стабильную ветку
+        "--branch=stable",
         lazypath,
     })
 end
 
--- Добавляем lazy.nvim в runtimepath
 vim.opt.rtp:prepend(lazypath)
 
 -- Настраиваем lazy.nvim
 require("lazy").setup({
-    -- Здесь lazy автоматически импортирует все файлы из lua/plugins/
+    -- Импорт из корня plugins/
     { import = "plugins" },
+    
+    -- Явно импортируем подпапки
+    { import = "plugins.lsp" },
+    
+    -- Можно добавить и другие подпапки
+    -- { import = "plugins.ui" },
+    -- { import = "plugins.editor" },
 }, {
-    -- Опции lazy.nvim
     checker = {
-        enabled = true,      -- автоматически проверять обновления
-        notify = false,      -- не показывать уведомления
+        enabled = true,
+        notify = false,
     },
     change_detection = {
-        notify = false,      -- не уведомлять об изменениях конфига
+        notify = false,
     },
 })
 

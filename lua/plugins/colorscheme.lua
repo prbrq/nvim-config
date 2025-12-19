@@ -1,8 +1,14 @@
 return {
-  "folke/tokyonight.nvim",
-  lazy = false,    -- Тема должна загружаться сразу при старте
-  priority = 1000, -- И иметь высший приоритет
-  config = function()
-    vim.cmd([[colorscheme tokyonight]])
-  end,
+    "folke/tokyonight.nvim",
+    priority = 1000,  -- загружается первым, до всех остальных
+    config = function()
+        -- Эта функция выполнится после загрузки плагина
+        require("tokyonight").setup({
+            style = "night",
+            transparent = false,
+        })
+        
+        -- Применяем цветовую схему
+        vim.cmd([[colorscheme tokyonight]])
+    end,
 }

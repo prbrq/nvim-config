@@ -1,3 +1,4 @@
-require("core.keymaps")
-require("core.lazy")
-require("core.options")
+require("config.options")
+require("config.lazy")
+-- require("config.keymaps")  -- добавим позже
+
